@@ -1,6 +1,6 @@
-# 应用场景
-该项目可应用于针对大量数据分数据库存储负载均衡的业务，可根据第三方服务的
-信息对数据库息进行路由，达到优化数据库操作的目的；也可在同一个项目中切换数据源进行数据库操作，免去rpc调用（优化中）的麻烦。
+# 应用背景
+由于spring-jdbc支持的动态数据源配置不支持运行时动态加入数据源，因此笔者在其源代码的基础上稍作修改，
+使其能够支持运行时动态切换数据源，从而进行切换数据库操作的功能。
 
 
 # 使用方式     
@@ -14,6 +14,7 @@ public List<User> testSwitch(SwitchInfo switchInfo) {
 }
 ````
 # Maven配置
+除了下属配置外，还需额外引用部分该工具正常运行所以来的包，比如AspectJ、Spring-jdbc、Druid...
 ````
 <dependency>
      <groupId>com.github.jerryzlei</groupId>
@@ -36,7 +37,7 @@ druid.datasource.minIdle=5
 # 动态数据源配置
 ## 设置数据源新增时的key，不同数据源保持唯一，只有url和username2种，不配置默认为url
 druid.datasource.dynamic.uniqueDataSourceKey=url 
-## 默认关闭该功能，因为druid数据源有关闭连接池的设置，如果只有几个数据源可忽略该配置
+## 默认关闭该功能，因为druid数据源有关闭连接池的设置
 druid.datasource.dynamic.enableCloseTask=false
 ## 启用enableCloseTask时使用，数据源闲置的最大时间，超过时间不使用就会关闭已有的连接池，单位毫秒，默认10分钟
 druid.datasource.dynamic.datasourceCloseInterval=600000
@@ -67,7 +68,7 @@ public class Application {
     }
 }
 ```
-* 可自定义自己的切换注解，比如给注解定义参数，根据参数来进行数据源切换（数据源不多也可以这样玩），并继承DsSwitchAop同时注入到spring容器中完成自定义aop配置，就可完成自定义扩展
+* 可自定义自己的切换注解，比如给注解定义参数，根据参数来进行数据源切换，并继承DsSwitchAop同时注入到spring容器中完成自定义aop配置，就可完成自定义扩展
 
 
 # 本项目在以下代码托管网站
